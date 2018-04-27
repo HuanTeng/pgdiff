@@ -10,11 +10,12 @@ import (
 	"bytes"
 	"database/sql"
 	"fmt"
-	"github.com/joncrlsn/misc"
-	"github.com/joncrlsn/pgutil"
 	"sort"
 	"strings"
 	"text/template"
+
+	"github.com/joncrlsn/misc"
+	"github.com/joncrlsn/pgutil"
 )
 
 var (
@@ -137,7 +138,6 @@ func (c FunctionSchema) Drop() {
 
 // Change handles the case where the function names match, but the definition does not
 func (c FunctionSchema) Change(obj interface{}) {
-	fmt.Println("-- Change")
 	c2, ok := obj.(*FunctionSchema)
 	if !ok {
 		fmt.Println("Error!!!, Change needs a FunctionSchema instance", c2)
