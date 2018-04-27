@@ -78,9 +78,6 @@ func main() {
 		os.Exit(1)
 	}
 
-	schemaType = strings.ToUpper(args[0])
-	fmt.Println("-- schemaType:", schemaType)
-
 	fmt.Println("-- db1:", dbInfo1)
 	fmt.Println("-- db2:", dbInfo2)
 	fmt.Println("-- Run the following SQL against db2:")
@@ -91,54 +88,54 @@ func main() {
 	conn2, err := dbInfo2.Open()
 	check("opening database 2", err)
 
-	// This section needs to be improved so that you do not need to choose the type
-	// of alter statements to generate.  Rather, all should be generated in the
-	// proper order.
-	if schemaType == "ALL" {
-		if dbInfo1.DbSchema == "*" {
+	for _, schemaType := range args {
+		fmt.Println("-- schemaType:", schemaType)
+		if schemaType == "ALL" {
+			if dbInfo1.DbSchema == "*" {
+				compareSchematas(conn1, conn2)
+			}
 			compareSchematas(conn1, conn2)
+			compareRoles(conn1, conn2)
+			compareSequences(conn1, conn2)
+			compareTables(conn1, conn2)
+			compareColumns(conn1, conn2)
+			compareIndexes(conn1, conn2) // includes PK and Unique constraints
+			compareViews(conn1, conn2)
+			compareForeignKeys(conn1, conn2)
+			compareFunctions(conn1, conn2)
+			compareTriggers(conn1, conn2)
+			compareOwners(conn1, conn2)
+			compareGrantRelationships(conn1, conn2)
+			compareGrantAttributes(conn1, conn2)
+		} else if schemaType == "SCHEMA" {
+			compareSchematas(conn1, conn2)
+		} else if schemaType == "ROLE" {
+			compareRoles(conn1, conn2)
+		} else if schemaType == "SEQUENCE" {
+			compareSequences(conn1, conn2)
+		} else if schemaType == "TABLE" {
+			compareTables(conn1, conn2)
+		} else if schemaType == "COLUMN" {
+			compareColumns(conn1, conn2)
+		} else if schemaType == "INDEX" {
+			compareIndexes(conn1, conn2)
+		} else if schemaType == "VIEW" {
+			compareViews(conn1, conn2)
+		} else if schemaType == "FOREIGN_KEY" {
+			compareForeignKeys(conn1, conn2)
+		} else if schemaType == "FUNCTION" {
+			compareFunctions(conn1, conn2)
+		} else if schemaType == "TRIGGER" {
+			compareTriggers(conn1, conn2)
+		} else if schemaType == "OWNER" {
+			compareOwners(conn1, conn2)
+		} else if schemaType == "GRANT_RELATIONSHIP" {
+			compareGrantRelationships(conn1, conn2)
+		} else if schemaType == "GRANT_ATTRIBUTE" {
+			compareGrantAttributes(conn1, conn2)
+		} else {
+			fmt.Println("Not yet handled:", schemaType)
 		}
-		compareSchematas(conn1, conn2)
-		compareRoles(conn1, conn2)
-		compareSequences(conn1, conn2)
-		compareTables(conn1, conn2)
-		compareColumns(conn1, conn2)
-		compareIndexes(conn1, conn2) // includes PK and Unique constraints
-		compareViews(conn1, conn2)
-		compareForeignKeys(conn1, conn2)
-		compareFunctions(conn1, conn2)
-		compareTriggers(conn1, conn2)
-		compareOwners(conn1, conn2)
-		compareGrantRelationships(conn1, conn2)
-		compareGrantAttributes(conn1, conn2)
-	} else if schemaType == "SCHEMA" {
-		compareSchematas(conn1, conn2)
-	} else if schemaType == "ROLE" {
-		compareRoles(conn1, conn2)
-	} else if schemaType == "SEQUENCE" {
-		compareSequences(conn1, conn2)
-	} else if schemaType == "TABLE" {
-		compareTables(conn1, conn2)
-	} else if schemaType == "COLUMN" {
-		compareColumns(conn1, conn2)
-	} else if schemaType == "INDEX" {
-		compareIndexes(conn1, conn2)
-	} else if schemaType == "VIEW" {
-		compareViews(conn1, conn2)
-	} else if schemaType == "FOREIGN_KEY" {
-		compareForeignKeys(conn1, conn2)
-	} else if schemaType == "FUNCTION" {
-		compareFunctions(conn1, conn2)
-	} else if schemaType == "TRIGGER" {
-		compareTriggers(conn1, conn2)
-	} else if schemaType == "OWNER" {
-		compareOwners(conn1, conn2)
-	} else if schemaType == "GRANT_RELATIONSHIP" {
-		compareGrantRelationships(conn1, conn2)
-	} else if schemaType == "GRANT_ATTRIBUTE" {
-		compareGrantAttributes(conn1, conn2)
-	} else {
-		fmt.Println("Not yet handled:", schemaType)
 	}
 }
 

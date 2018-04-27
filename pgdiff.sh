@@ -54,7 +54,7 @@ function rundiff() {
                  -u "$USER2" -w "$PASS2" -h "$HOST2" -p "$PORT2" -d "$NAME2" -o "$OPT2" \
                  $TYPE > "$sqlFile"
         rc=$? && [[ $rc != 0 ]] && exit $rc
-        if [[ $(cat "$sqlFile" | wc -l) -gt 4 ]]; then
+        if [[ $(cat "$sqlFile" | grep -v ^--.* | wc -l) -gt 0 ]]; then
             vi "$sqlFile"
             read -p "Do you wish to run this against ${NAME2}? [yN]: " yn 
             if [[ $yn =~ ^y ]]; then
